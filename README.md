@@ -52,8 +52,6 @@ In this project, the sensor is connected to an analog input (A0). The Arduino re
 | GND | GND |
 | OUT | A0 |
 
-<!-- TODO: insert wiring diagram of just Arduino + breadboard + IR sensor-->
-
 **Arduino Code:** <br />
 ```C++
 // ============================================================
@@ -107,15 +105,27 @@ void loop() {
 |:---|:---:|
 | VCC | 5V |
 | GND | GND |
-| TX | Pin 2 |
-| RX | Pin 3 |
+| TX | Pin 10 |
+| RX | Pin 11 |
 | SPK+/SPK- | Speaker (one leg on SPK+, the other on SPK- |
 
-Optional: Use a 1kΩ resistor between Arduino TX and DFPlayer RX for signal protection.<br>
+<p align="center">
+  <img src="https://github.com/mymomcallsmeeylul/Fortune-Teller-Capybara-Arduino-Prototype/blob/main/media/DFSPlayer-pinout.png" width="500"/>
+</p>
 
-<!-- TODO: insert wiring diagram of just Arduino + breadboard + DFSPlayer + Speaker -->
+<p align="center">
+  <img src="https://github.com/mymomcallsmeeylul/Fortune-Teller-Capybara-Arduino-Prototype/blob/main/media/DFSPlayer-wiring.png" width="600"/>
+</p>
 
-**Arduino Code:** <br />
+  <p>
+    Optional: Use a 1kΩ resistor between Arduino TX and DFPlayer RX for signal protection.<br>
+
+**Arduino Code:**
+   1. First open your Arduino IDE program. Then click on the Library Manager icon on the left sidebar.
+   2. Type “DFRobotDFPlayerMini” in the search box to filter your results.
+   3. Look for the DFRobotDFPlayerMini library.
+   4. Click the Install button to add it to your Arduino IDE. <br>
+  
 ```C++
 #include <SoftwareSerial.h>
 #include <DFRobotDFPlayerMini.h>
@@ -155,24 +165,9 @@ void loop() {
   }
 }
 ```
+<br />
 
-
-  <p>
-   To make the coding process easier, we can utilize a library that has simplified the complex operations needed to utilize the MP3 Player To install the DFRobotDFPlayerMini:
-   
-   1. First open your Arduino IDE program. Then click on the Library Manager icon on the left sidebar.
-   2. Type “DFRobotDFPlayerMini” in the search box to filter your results.
-   3. Look for the DFRobotDFPlayerMini library.
-   4. Click the Install button to add it to your Arduino IDE. <br>
-
-  </p>
-
-
-  <details>
-  <summary>
-     <h2>Step 2: Wiring The Prototype & Library Setup</h2>
-  </summary>
-  <br>
+### Step 2: Wiring The Prototype & Library Setup
 
 **System Logic:** <br />
     
@@ -188,6 +183,7 @@ void loop() {
 This prevents repeated triggering while someone is still standing nearby. <br>
 
   </p>
+  <br />
   
 **Arduino Code:** <br />
 ```C++
@@ -262,12 +258,9 @@ void playRandomFortune() {
 Run the code above and check the serial monitor. Place your hand in front of your sensor-- did the output change? Try moving your hand a bit farther or closer. If your sensor reading gets higer or lower accordingly, congrats, you did it! Move on to the next step. 
 </p>
 </details>
+<br>
 
-<details>
-  <summary>
-     <h2>Step 3: Prototype Installation</h2>
-  </summary>
-  <br>
+### Step 3: Prototype Installation
 
 To improve durability and presentation, you may design a custom enclosure that:
 * Exposes the IR sensor
@@ -286,9 +279,9 @@ To improve durability and presentation, you may design a custom enclosure that:
 * Sound vents
 * Mounting holes
 </details>
+<br>
 
-<details>
-  <summary><h2>Step 4: Final Outcome</h2></summary>
+### Step 4: Final Outcome
   
 When completed, this system:
 * Detects approaching users
