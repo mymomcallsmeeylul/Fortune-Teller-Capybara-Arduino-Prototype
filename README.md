@@ -38,19 +38,13 @@ Make sure your MicroSD card is formatted to FAT32 and contains MP3 files named:
 
   </p>
 
-<details>
-  <summary>
-     <h2>Step 1: IR Proximity Sensor (Distance Detection)</h2>
-  </summary>
-  <br>
+
   
-  <p>
+<h2>Setting up the IR Proximity Sensor (Distance Detection)</h2>
+<p>
 The infrared proximity sensor detects nearby objects by emitting IR light and measuring how much is reflected back. When a person moves close, the reflected signal increases.
 In this project, the sensor is connected to an analog input (A0). The Arduino reads this signal and compares it to a threshold to decide whether someone is present. 
-    
-  </p>
-
-For this project, connect the IR Proximity sensor to the arduino and DFPLayer to the arduino as follows:
+</p>
 
 | IR Proximity Sensor | Arduino Pin |
 |:---|:---:|
@@ -58,15 +52,109 @@ For this project, connect the IR Proximity sensor to the arduino and DFPLayer to
 | GND | GND |
 | OUT | A0 |
 
-| DFPLayer | Arduino Pin |
+<!-- TODO: insert wiring diagram of just Arduino + breadboard + IR sensor-->
+
+**Arduino Code:** <br />
+```C++
+// ============================================================
+//  IR_SENSOR_ONLY.ino
+//  Reads an IR proximity sensor and prints trigger events.
+//  Where your output item will go, Serial.print() is used to verify logic
+// ============================================================
+
+#define IR_PIN A0
+
+bool inRange  = false;  // is someone detected right now?
+int threshold = 150 // adjust threshold as needed
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+
+  // --------- 1) READ IR SENSOR ---------
+  int reading = analogRead(IR_PIN);
+  Serial.println(reading);
+  bool detected = (reading > threshold); // threshold check logic
+
+  // --------- 3) If detected ---------
+  if (detected && !inRange) {
+    Serial.print("DETECTED AND IN RANGE");
+    inRange   = true;
+  }
+
+  // --------- 4) If nobody detected, reset inRange ---------
+  if (!detected) {
+    inRange = false;
+  }
+
+  delay(100);
+}
+```
+
+<h2>Setting up the DFSMini Player</h2>
+
+### Format SD Card
+1. erase the SD card
+2. right click on SD card:
+   - on mac select: MS-DOS (FAT32)
+3. Name files "0001.mp3", "0002.mp3", etc
+
+### Wire DFSMini Player
+
+| DFSLayer | Arduino Pin |
 |:---|:---:|
 | VCC | 5V |
 | GND | GND |
 | TX | Pin 2 |
 | RX | Pin 3 |
-| SPK+/SPK- | Speaker |
+| SPK+/SPK- | Speaker (one leg on SPK+, the other on SPK- |
 
 Optional: Use a 1kΩ resistor between Arduino TX and DFPlayer RX for signal protection.<br>
+
+<!-- TODO: insert wiring diagram of just Arduino + breadboard + DFSPlayer + Speaker -->
+
+**Arduino Code:** <br />
+```C++
+#include <SoftwareSerial.h>
+#include <DFRobotDFPlayerMini.h>
+
+/* 
+MAKE SURE SD CARD IS FORMATTED to FAT32:
+1. erase the SD card
+2. right click on SD card:
+- on mac select: MS-DOS (FAT32)
+*/
+
+SoftwareSerial mp3Serial(2, 3);
+DFRobotDFPlayerMini player;
+
+void setup() {
+  Serial.begin(9600);
+  mp3Serial.begin(9600);
+
+  if (!player.begin(mp3Serial)) {
+    Serial.println("DFPlayer not responding!");
+    while (true) {}
+  }
+
+  Serial.println("DFPlayer is online!");
+  player.volume(30);
+
+  Serial.println("Playing track 1...");
+  player.play(1);  // tracks are numbered 1, 2, 3... on the SD card
+}
+
+void loop() {
+  if (player.available()) {
+    if (player.readType() == DFPlayerPlayFinished) {
+      player.read();  // consume the message
+      Serial.println("Track finished.");
+    }
+  }
+}
+```
 
 
   <p>
@@ -78,7 +166,7 @@ Optional: Use a 1kΩ resistor between Arduino TX and DFPlayer RX for signal prot
    4. Click the Install button to add it to your Arduino IDE. <br>
 
   </p>
-</details>
+
 
   <details>
   <summary>
